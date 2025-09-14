@@ -155,4 +155,66 @@ let argumentsLength = function (...args) {
 
 argumentsLength({}, null, "3");
 
+// 2723. Add Two Promises
 
+let addTwoPromises = async function (promise1, promise2) {
+  return Promise.all([promise1, promise2]).then((values) => {
+    let result = 0;
+
+    for (let i = 0; i < values.length; i++) {
+      result += values[i];
+    }
+
+    return result;
+  });
+};
+
+addTwoPromises(Promise.resolve(10), Promise.resolve(-12)); // -2
+
+// 2621. Sleep
+
+async function sleep(millis) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, millis);
+  });
+}
+
+let t = Date.now();
+
+sleep(100).then(() => console.log(Date.now() - t)); // 100
+
+// 2715. Timeout Cancellation
+
+let cancellable = function (fn, args, tim) {
+  let id = setTimeout(fn, tim, ...args);
+
+  return function cancel() {
+    clearTimeout(id);
+  };
+};
+
+const result = [];
+
+const fn4 = (x) => x * 5;
+const args = [2],
+  tim = 20,
+  cancelTimeMs = 50;
+
+const start = performance.now();
+
+const log = (...argsArr) => {
+  const diff = Math.floor(performance.now() - start);
+  result.push({ time: diff, returned: fn(...argsArr) });
+};
+
+const cancel = cancellable(log, args, tim);
+
+const maxT = Math.max(tim, cancelTimeMs);
+
+setTimeout(cancel, cancelTimeMs);
+
+setTimeout(() => {
+  console.log(result); // [{"time":20,"returned":10}]
+}, maxT + 15);
