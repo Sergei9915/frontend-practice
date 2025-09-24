@@ -183,7 +183,7 @@ async function sleep(millis) {
 
 let t = Date.now();
 
-sleep(100).then(() => console.log(Date.now() - t)); // 100
+sleep(100).then(() => Date.now() - t); // 100
 
 // 2715. Timeout Cancellation
 
@@ -216,5 +216,30 @@ const maxT = Math.max(tim, cancelTimeMs);
 setTimeout(cancel, cancelTimeMs);
 
 setTimeout(() => {
-  console.log(result); // [{"time":20,"returned":10}]
+  // console.log(result); // [{"time":20,"returned":10}]
 }, maxT + 15);
+
+// 2637. Promise Time Limit
+
+var timeLimit = function (fn, t) {
+  return async function (...args) {
+    return new Promise((resolve, reject) => {
+      const timer = setTimeout(() => {
+        reject("Time Limit Exceeded");
+      }, t);
+
+      fn(...args)
+        .then((res) => {
+          clearTimeout(timer);
+          resolve(res);
+        })
+        .catch((err) => {
+          clearTimeout(timer);
+          reject(err);
+        });
+    });
+  };
+};
+
+const limited = timeLimit((t) => new Promise((res) => setTimeout(res, t)), 100);
+limited(99).catch(console.log);
