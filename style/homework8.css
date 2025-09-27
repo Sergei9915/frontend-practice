@@ -1,0 +1,28 @@
+.block-info {
+  display: flex;
+  justify-content: space-around;
+}
+
+.two-block-info div {
+  display: flex;
+  justify-content: space-around;
+}
+
+.block-info p {
+  color: black;
+  font-weight: bold;
+  font-size: 30px;
+  width: 150px;
+}
+
+p {
+  color: rgb(0, 3, 176);
+  font-size: 20px;
+  background-color: bisque;
+  width: 100px;
+  text-align: center;
+}
+
+h1 {
+  text-align: center;
+}
